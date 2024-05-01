@@ -1,31 +1,48 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .serializers import UserSerializer, NoteSerializer
+from .serializers import UserSerializer, MovieSerializer, RatingSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Note
+from .models import Movie, Rating
 
-class NoteListCreate(generics.ListCreateAPIView):
-    serializer_class = NoteSerializer
+class MovieViewSet(generics.ListCreateAPIView):
+    serializer_class = MovieSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        return Note.objects.filter(author=user)
+        queryset = Movie.objects.all()
+        name = self.request.query_params.get('name', None)
+        year = self.request.query_params.get('year', None)
+
+        if name:
+            queryset = queryset.filter(name__icontains=name)
+        if year:
+            year_int = int(year)
+            queryset = queryset.filter(movie_created=year_int)
+        
+        return queryset
     
     def perform_create(self, serializer):
-        if serializer.is_valid():
-            serializer.save(author=self.request.user)
-        else:
-            print(serializer.errors)
+        serializer.save()
 
-class NoteDelete(generics.DestroyAPIView):
-    serializer_class = NoteSerializer
+class RatingViewSet(generics.ListCreateAPIView):
+    serializer_class = RatingSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        user = self.request.user
-        return Note.objects.filter(author=user)
+        queryset = Rating.objects.all()
+        movie_id = self.request.query_params.get('movie_id')
+        user_id = self.request.query_params.get('user_id')
+
+        if movie_id:
+            queryset = queryset.filter(movie__id=movie_id)
+        if user_id:
+            queryset = queryset.filter(user__id=user_id)
+
+        return queryset
+    
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()

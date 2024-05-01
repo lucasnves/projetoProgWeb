@@ -4,7 +4,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import NotFound from './pages/NotFound'
 import ProtectedRoute from './components/ProtectedRoute'
-import Project from './pages/project'
+import Home from './pages/Home'
 
 function Logout() {
   localStorage.clear()
@@ -24,8 +24,7 @@ function App() {
           path='/'
           element={
             <ProtectedRoute>
-              {/* <Home /> */}
-              <Project />
+              <Home />
             </ProtectedRoute>
           }
         />
