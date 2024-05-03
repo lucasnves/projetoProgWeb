@@ -10,7 +10,7 @@ class MovieViewSet(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Movie.objects.all()
+        queryset = Movie.objects.all().order_by('-created_at')
         name = self.request.query_params.get('name', None)
         year = self.request.query_params.get('year', None)
 

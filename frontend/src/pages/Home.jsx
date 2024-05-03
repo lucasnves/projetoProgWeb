@@ -6,18 +6,27 @@ import perfil from '../assets/perfil.jpg';
 
 function Home() {
     const [movies, setMovies] = useState([]);
+    const [topMovies, setTopMovies] = useState([]);
 
+    const loadAllMovies = async () => {
+        const loadMovies = await api.get('api/movies/')
+            .then(response => { return response.data;})
+            .catch(error => { console.error('Erro ao buscar filmes:', error);});
+
+        setMovies(loadMovies);
+        setTopMovies(() => {
+            if (!loadMovies) return [];
+            const sortedMovies = [...loadMovies].sort((a, b) => b.average_stars - a.average_stars);
+            return sortedMovies.slice(0, 5);
+        })
+    }
+
+    const handleClickCard = (movie) => {
+        console.log('Card clicado:', movie);
+    };
 
     useEffect(() => {
-        api.get('api/movies/')
-            .then(response => {
-                console.log(response.data);
-                setMovies(response.data);
-            })
-            .catch(error => {
-                console.error('Erro ao buscar filmes:', error);
-            });
-
+        loadAllMovies()
         // const movieName = "teste2";
         // api.get(`api/movies/?name=${movieName}`)
     }, []);
@@ -45,11 +54,11 @@ function Home() {
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-around'}}>
             <div style={{padding: 5, width: '60%'}}>
-                {/* <Card item={avaliation} title={'Últimas avaliações'} /> */}
-                <Card item={movies} title={'Recentes'} />
+                {/* <Card item={avaliation} title={'Últimas avaliações'}  onClick={handleClickCard}/> */}
+                <Card item={movies} title={'Recentes'} onClick={handleClickCard} />
             </div>
             <div>
-                {/* <Card item={top5} title={'Mais avalidas'} other={true} /> */}
+                <Card item={topMovies} title={'Mais avalidas'} other={true} onClick={handleClickCard}/>
             </div>
         </div>
     </div>   
