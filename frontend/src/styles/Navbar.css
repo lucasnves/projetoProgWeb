@@ -1,0 +1,31 @@
+.main-nav {
+  padding: 0 40px;
+  min-height: 70px;
+}
+
+.main-menu {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  width: 380px;
+}
+
+.main-menu a {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+}
+
+.main-menu a:hover {
+  color: #ffffff;
+}
+
+.active {
+  font-weight: bold;
+  color: #ffffff !important;
+}
+
+.main-nav img {
+  width: 80px;
+  margin: 10px;
+  border-radius: 18px;
+}
