@@ -4,7 +4,7 @@ import '../styles/Navbar.css';
 
 export default function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark main-nav">
+    <nav className="navbar navbar-expand-lg main-nav">
       <div className="container-fluid">
         <a className="navbar-brand main-logo" href="/">
           <img src={logo} />
