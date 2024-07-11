@@ -32,7 +32,7 @@ export default function Navbar() {
             </li>
             <li className="nav-item">
               <NavLink
-                to="/filmes"
+                to="/movies"
                 className={({ isActive }) => (isActive ? 'active' : '')}
               >
                 Filmes
@@ -48,7 +48,7 @@ export default function Navbar() {
             </li>
             <li className="nav-item">
               <NavLink
-                to="/documentarios"
+                to="/documentary"
                 className={({ isActive }) => (isActive ? 'active' : '')}
               >
                 Documentários
