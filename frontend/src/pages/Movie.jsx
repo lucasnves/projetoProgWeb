@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { loadAllRatings, loadMovie } from '../lib/store';
+import { loadMovieRatings, loadMovie } from '../lib/store';
 
 export default function Movie() {
   const { id } = useParams();
@@ -9,7 +9,7 @@ export default function Movie() {
 
   const load = async () => {
     const data = await loadMovie(id);
-    const dataRatings = await loadAllRatings(id);
+    const dataRatings = await loadMovieRatings(id);
 
     setMovie(data);
     setRatings(dataRatings);

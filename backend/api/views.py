@@ -4,6 +4,7 @@ from rest_framework import generics
 from .serializers import UserSerializer, MovieSerializer, RatingSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Movie, Rating
+from django.db.models import Avg, Count
 
 class MovieViewSet(generics.ListCreateAPIView):
     serializer_class = MovieSerializer
@@ -22,6 +23,34 @@ class MovieViewSet(generics.ListCreateAPIView):
         if year:
             year_int = int(year)
             queryset = queryset.filter(movie_created=year_int)
+        
+        return queryset
+    
+    def perform_create(self, serializer):
+        serializer.save()
+
+class FilterMoviesView(generics.ListCreateAPIView):
+    serializer_class = MovieSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        filter_type = self.request.query_params.get('filter')
+        queryset = Movie.objects.all()
+
+        if filter_type == 'recents':
+            queryset = queryset.order_by('-created_at')
+        elif filter_type == 'best_rated':
+            queryset = queryset.annotate(avg_stars=Avg('movie_ratings__star')).order_by('-avg_stars')
+        elif filter_type == 'top_rated':
+            queryset = queryset.annotate(rating_count=Count('movie_ratings')).order_by('-rating_count')
+        elif filter_type == 'least_rated':
+            queryset = queryset.annotate(rating_count=Count('movie_ratings')).order_by('rating_count')
+        elif filter_type == 'most_commented':
+            queryset = queryset.annotate(comment_count=Count('movie_ratings__comment')).order_by('-comment_count')
+        elif filter_type == 'name':
+            search_term = self.request.query_params.get('searchTerm')
+            if search_term:
+                queryset = queryset.filter(name__icontains=search_term)
         
         return queryset
     
@@ -51,5 +80,3 @@ class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
-
-# Create your views here.
