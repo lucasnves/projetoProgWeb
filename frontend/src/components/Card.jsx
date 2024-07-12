@@ -3,16 +3,15 @@ import poster from '../assets/images/avatar.jpg';
 import '../styles/Card.css';
 import Comments from './Comments';
 
-export default function Card({ item, title, href, other, onClick }) {
-  console.log(item);
+export default function Card({ item, title, href, onClick }) {
   function renderStars(numStars) {
     let stars = [];
     for (let i = 0; i < numStars; i++) {
       stars.push(
         <svg
           key={i}
-          width={other ? '20' : '24'}
-          height={other ? '20' : '24'}
+          width={'24'}
+          height={'24'}
           viewBox="0 0 24 24"
           fill="#ffb300"
           xmlns="http://www.w3.org/2000/svg"
@@ -25,8 +24,8 @@ export default function Card({ item, title, href, other, onClick }) {
       stars.push(
         <svg
           key={i}
-          width={other ? '18' : '22'}
-          height={other ? '18' : '22'}
+          width={'22'}
+          height={'22'}
           viewBox="0 0 24 26"
           fill="none"
           stroke="#ffb300"
@@ -41,10 +40,10 @@ export default function Card({ item, title, href, other, onClick }) {
   }
 
   return (
-    <div>
+    <div style={{ width: '80%' }}>
       <div className="card-title">
-        <h3>{title}</h3>
-        <h4>Ver mais</h4>
+        <p style={{ fontWeight: 700, fontSize: 32 }}>{title}</p>
+        <p style={{ fontWeight: 500, fontSize: 20 }}>Ver mais</p>
       </div>
       {item.map((item) => (
         <div
@@ -52,56 +51,28 @@ export default function Card({ item, title, href, other, onClick }) {
           className="card-content"
           onClick={() => onClick(item)}
         >
-          <img
-            style={
-              other
-                ? { width: 90, borderRadius: 3 }
-                : { width: 120, borderRadius: 3 }
-            }
-            src={poster}
-          />
-          {other ? (
+          <img style={{ width: 130, borderRadius: 8 }} src={poster} />
+          <div style={{ width: '100%' }}>
             <div
               style={{
-                minWidth: 250,
-                maxWidth: 250,
                 display: 'flex',
-                flexDirection: 'column',
                 justifyContent: 'space-between',
+                background: 'red'
               }}
             >
-              <div>
-                <h3>{item.name}</h3>
-                <small>{item.author}</small>
-              </div>
-              <div
-                style={{
-                  position: 'relative',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                <h2>{renderStars(item.average_stars)}</h2>
+              <p style={{ fontWeight: 700, fontSize: 28 }}>{item.name}</p>
+              <div style={{ display: 'flex', gap: 10 }}>
+                <p>{renderStars(item.average_stars)}</p>
+                <Comments item={item.comments_count} />
               </div>
             </div>
-          ) : (
-            <div style={{ width: '100%' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <h2>{item.name}</h2>
-                <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-                  <h2>{renderStars(item.average_stars)}</h2>
-                  <Comments item={item.comments_count} />
-                </div>
-              </div>
-              <small>
-                {item.author} • {item.movie_created}
-              </small>
-              <br />
-              <br />
-              <p>{item.description}</p>
-            </div>
-          )}
+            <small>
+              {item.author} • {item.movie_created}
+            </small>
+            <br />
+            <br />
+            <p>{item.description}</p>
+          </div>
         </div>
       ))}
     </div>

@@ -12,8 +12,11 @@ class MovieViewSet(generics.ListCreateAPIView):
     def get_queryset(self):
         queryset = Movie.objects.all().order_by('-created_at')
         name = self.request.query_params.get('name', None)
+        movie_id = self.request.query_params.get('id', None)
         year = self.request.query_params.get('year', None)
 
+        if movie_id:
+            queryset = queryset.filter(id__icontains=movie_id)
         if name:
             queryset = queryset.filter(name__icontains=name)
         if year:
