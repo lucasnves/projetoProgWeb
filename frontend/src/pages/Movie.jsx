@@ -4,7 +4,7 @@ import { loadMovieRatings, loadMovie } from '../lib/store';
 
 export default function Movie() {
   const { id } = useParams();
-  const [movie, setMovie] = useState([]);
+  const [movie, setMovie] = useState(null);
   const [ratings, setRatings] = useState([]);
 
   const load = async () => {
@@ -25,8 +25,9 @@ export default function Movie() {
         <p>{movie.name}</p>
         <p>{movie.average_stars}</p>
         <p>{movie.comments_count}</p>
-        <p>{movie.movie_created}</p>
+        <p>{movie.year_released}</p>
         <p>{movie.author}</p>
+        <p>{movie.box_office}</p>
       </div>
       <div>
         {ratings.map((item) => (

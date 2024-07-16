@@ -1,61 +1,108 @@
-from django.shortcuts import render
+# api/views.py
+
 from django.contrib.auth.models import User
-from rest_framework import generics
-from .serializers import UserSerializer, MovieSerializer, RatingSerializer
+from rest_framework import generics, status
+from rest_framework.response import Response
+from .serializers import UserSerializer, WorkSerializer, MovieSerializer, SeriesSerializer, DocumentarySerializer, RatingSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Movie, Rating
+from .models import Work, Movie, Series, Documentary, Rating
 from django.db.models import Avg, Count
 
-class MovieViewSet(generics.ListCreateAPIView):
-    serializer_class = MovieSerializer
+class WorkViewSet(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        queryset = Movie.objects.all().order_by('-created_at')
-        name = self.request.query_params.get('name', None)
-        movie_id = self.request.query_params.get('id', None)
-        year = self.request.query_params.get('year', None)
+        queryset = Work.objects.all()
+        name = self.request.query_params.get('name')
+        year = self.request.query_params.get('year')
+        work_type = self.request.query_params.get('type')
 
-        if movie_id:
-            queryset = queryset.filter(id__icontains=movie_id)
         if name:
             queryset = queryset.filter(name__icontains=name)
         if year:
-            year_int = int(year)
-            queryset = queryset.filter(movie_created=year_int)
-        
-        return queryset
-    
-    def perform_create(self, serializer):
-        serializer.save()
+            queryset = queryset.filter(work_created=year)
+        if work_type:
+            queryset = queryset.instance_of(self.get_model_from_type(work_type))
 
-class FilterMoviesView(generics.ListCreateAPIView):
-    serializer_class = MovieSerializer
+        return queryset
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST':
+            return self.get_create_serializer_class()
+        else:
+            return self.get_retrieve_serializer_class()
+
+    def get_create_serializer_class(self):
+        work_type = self.request.data.get('type')
+        if work_type == 'movie':
+            return MovieSerializer
+        elif work_type == 'series':
+            return SeriesSerializer
+        elif work_type == 'documentary':
+            return DocumentarySerializer
+        return WorkSerializer
+
+    def get_retrieve_serializer_class(self):
+        work_type = self.request.query_params.get('type')
+        if work_type == 'movie':
+            return MovieSerializer
+        elif work_type == 'series':
+            return SeriesSerializer
+        elif work_type == 'documentary':
+            return DocumentarySerializer
+        return WorkSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def get_model_from_type(self, work_type):
+        if work_type == 'movie':
+            return Movie
+        elif work_type == 'series':
+            return Series
+        elif work_type == 'documentary':
+            return Documentary
+        return Work
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+class WorkDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Work.objects.all()
+    serializer_class = WorkSerializer
+
+class FilterWorksView(generics.ListAPIView):
+    serializer_class = WorkSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         filter_type = self.request.query_params.get('filter')
-        queryset = Movie.objects.all()
+        queryset = Work.objects.all()
 
         if filter_type == 'recents':
             queryset = queryset.order_by('-created_at')
         elif filter_type == 'best_rated':
-            queryset = queryset.annotate(avg_stars=Avg('movie_ratings__star')).order_by('-avg_stars')
+            queryset = queryset.annotate(avg_stars=Avg('work_ratings__star')).order_by('-avg_stars')
         elif filter_type == 'top_rated':
-            queryset = queryset.annotate(rating_count=Count('movie_ratings')).order_by('-rating_count')
+            queryset = queryset.annotate(rating_count=Count('work_ratings')).order_by('-rating_count')
         elif filter_type == 'least_rated':
-            queryset = queryset.annotate(rating_count=Count('movie_ratings')).order_by('rating_count')
+            queryset = queryset.annotate(rating_count=Count('work_ratings')).order_by('rating_count')
         elif filter_type == 'most_commented':
-            queryset = queryset.annotate(comment_count=Count('movie_ratings__comment')).order_by('-comment_count')
-        elif filter_type == 'name':
-            search_term = self.request.query_params.get('searchTerm')
-            if search_term:
-                queryset = queryset.filter(name__icontains=search_term)
-        
+            queryset = queryset.annotate(comment_count=Count('work_ratings__comment')).order_by('-comment_count')
+
         return queryset
-    
-    def perform_create(self, serializer):
-        serializer.save()
 
 class RatingViewSet(generics.ListCreateAPIView):
     serializer_class = RatingSerializer
@@ -63,16 +110,16 @@ class RatingViewSet(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = Rating.objects.all()
-        movie_id = self.request.query_params.get('movie_id')
+        work_id = self.request.query_params.get('work_id')
         user_id = self.request.query_params.get('user_id')
 
-        if movie_id:
-            queryset = queryset.filter(movie__id=movie_id)
+        if work_id:
+            queryset = queryset.filter(work__id=work_id)
         if user_id:
             queryset = queryset.filter(user__id=user_id)
 
         return queryset
-    
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 

@@ -14,7 +14,7 @@ export default function Movies() {
     setMovies(data);
   };
 
-  const onClick = async (item) => {
+  const onClick = (item) => {
     navigate(`/movie/${item.id}`);
   };
 
@@ -41,8 +41,6 @@ export default function Movies() {
 
   useEffect(() => {
     load();
-    // const movieName = "teste2";
-    // api.get(`api/movies/?name=${movieName}`)
   }, []);
 
   const filters = [
@@ -70,7 +68,7 @@ export default function Movies() {
         </div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Card item={movies} title={filtro ?? 'Filmes'} onClick={onClick} />
+        <Card items={movies} title={filtro ?? 'Filmes'} onClick={onClick} />
       </div>
     </>
   );

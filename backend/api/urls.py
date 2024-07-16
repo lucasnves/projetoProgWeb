@@ -1,8 +1,12 @@
+# api/urls.py
+
 from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('movies/', views.MovieViewSet.as_view(), name='movie-list'),
-    path('movies/filter/', views.FilterMoviesView.as_view(), name='movie-filter'),
+    path('works/', views.WorkViewSet.as_view(), name='work-list'),
+    path('works/filter/', views.FilterWorksView.as_view(), name='work-filter'),
+    path('works/<int:pk>/', views.WorkDetailView.as_view(), name='work-detail'),
     path('ratings/', views.RatingViewSet.as_view(), name='ratings-list'),
+    path('users/', views.CreateUserView.as_view(), name='user-create'),
 ]
