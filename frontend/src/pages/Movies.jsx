@@ -12,6 +12,7 @@ export default function Movies() {
   const load = async () => {
     const data = await loadAllMovies();
     setMovies(data);
+    console.log(movies);
   };
 
   const onClick = (item) => {
@@ -68,7 +69,7 @@ export default function Movies() {
         </div>
       </div>
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Card items={movies} title={filtro ?? 'Filmes'} onClick={onClick} />
+        <Card item={movies} title={filtro ?? 'Filmes'} onClick={onClick} />
       </div>
     </>
   );

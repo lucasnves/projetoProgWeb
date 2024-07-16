@@ -4,7 +4,7 @@ import api from '../api';
 export const loadAllMovies = async () => {
   try {
     const response = await api.get('api/works/?type=movie');
-    return response.data[0];
+    return response.data;
   } catch (error) {
     console.error('Erro ao buscar filmes:', error);
     return [];

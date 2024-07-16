@@ -4,6 +4,7 @@ import '../styles/Card.css';
 import Comments from './Comments';
 
 export default function Card({ item, title, href, onClick }) {
+  console.log(item);
   function renderStars(numStars) {
     let stars = [];
     for (let i = 0; i < numStars; i++) {
@@ -57,7 +58,6 @@ export default function Card({ item, title, href, onClick }) {
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
-                background: 'red'
               }}
             >
               <p style={{ fontWeight: 700, fontSize: 28 }}>{item.name}</p>
