@@ -16,6 +16,7 @@ class WorkViewSet(generics.ListCreateAPIView):
         name = self.request.query_params.get('name')
         year = self.request.query_params.get('year')
         work_type = self.request.query_params.get('type')
+        id = self.request.query_params.get('id')
 
         if name:
             queryset = queryset.filter(name__icontains=name)
@@ -23,6 +24,8 @@ class WorkViewSet(generics.ListCreateAPIView):
             queryset = queryset.filter(work_created=year)
         if work_type:
             queryset = queryset.instance_of(self.get_model_from_type(work_type))
+        if id:
+            queryset = queryset.filter(id=id)
 
         return queryset
 

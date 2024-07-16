@@ -16,19 +16,21 @@ export default function Movie() {
   };
 
   useEffect(() => {
-    load();
-  }, []);
+    if(id) {
+      load();
+    }
+  }, [id]);
 
   return (
     <>
-      <div>
+      {movie &&<div>
         <p>{movie.name}</p>
         <p>{movie.average_stars}</p>
         <p>{movie.comments_count}</p>
         <p>{movie.year_released}</p>
         <p>{movie.author}</p>
         <p>{movie.box_office}</p>
-      </div>
+      </div>}
       <div>
         {ratings.map((item) => (
           <div key={item.id}>

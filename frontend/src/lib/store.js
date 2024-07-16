@@ -14,7 +14,7 @@ export const loadAllMovies = async () => {
 // Carregar um filme específico
 export const loadMovie = async (id) => {
   try {
-    const response = await api.get(`api/works/?type=movie&id=${id}`);
+    const response = await api.get(`api/works/?id=${id}`);
     return response.data[0];
   } catch (error) {
     console.error('Erro ao buscar filme:', error);
