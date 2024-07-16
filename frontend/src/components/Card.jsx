@@ -4,7 +4,6 @@ import '../styles/Card.css';
 import Comments from './Comments';
 
 export default function Card({ item, title, href, onClick }) {
-  console.log(item);
   function renderStars(numStars) {
     let stars = [];
     for (let i = 0; i < numStars; i++) {

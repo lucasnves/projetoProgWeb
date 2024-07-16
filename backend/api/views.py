@@ -8,8 +8,15 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Work, Movie, Series, Documentary, Rating
 from django.db.models import Avg, Count
 
+WORK_TYPE_MODELS = {
+    'movie': Movie,
+    'series': Series,
+    'documentary': Documentary,
+}
+
 class WorkViewSet(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = WorkSerializer
 
     def get_queryset(self):
         queryset = Work.objects.all()
@@ -29,46 +36,8 @@ class WorkViewSet(generics.ListCreateAPIView):
 
         return queryset
 
-    def get_serializer_class(self):
-        if self.request.method == 'POST':
-            return self.get_create_serializer_class()
-        else:
-            return self.get_retrieve_serializer_class()
-
-    def get_create_serializer_class(self):
-        work_type = self.request.data.get('type')
-        if work_type == 'movie':
-            return MovieSerializer
-        elif work_type == 'series':
-            return SeriesSerializer
-        elif work_type == 'documentary':
-            return DocumentarySerializer
-        return WorkSerializer
-
-    def get_retrieve_serializer_class(self):
-        work_type = self.request.query_params.get('type')
-        if work_type == 'movie':
-            return MovieSerializer
-        elif work_type == 'series':
-            return SeriesSerializer
-        elif work_type == 'documentary':
-            return DocumentarySerializer
-        return WorkSerializer
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-
     def get_model_from_type(self, work_type):
-        if work_type == 'movie':
-            return Movie
-        elif work_type == 'series':
-            return Series
-        elif work_type == 'documentary':
-            return Documentary
-        return Work
+        return WORK_TYPE_MODELS.get(work_type, Work)
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -92,7 +61,11 @@ class FilterWorksView(generics.ListAPIView):
 
     def get_queryset(self):
         filter_type = self.request.query_params.get('filter')
+        work_type = self.request.query_params.get('type')
         queryset = Work.objects.all()
+
+        if work_type:
+            queryset = queryset.instance_of(self.get_model_from_type(work_type))
 
         if filter_type == 'recents':
             queryset = queryset.order_by('-created_at')
@@ -106,6 +79,9 @@ class FilterWorksView(generics.ListAPIView):
             queryset = queryset.annotate(comment_count=Count('work_ratings__comment')).order_by('-comment_count')
 
         return queryset
+    
+    def get_model_from_type(self, work_type):
+        return WORK_TYPE_MODELS.get(work_type, Work)
 
 class RatingViewSet(generics.ListCreateAPIView):
     serializer_class = RatingSerializer

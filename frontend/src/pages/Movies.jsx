@@ -12,7 +12,6 @@ export default function Movies() {
   const load = async () => {
     const data = await loadAllMovies();
     setMovies(data);
-    console.log(movies);
   };
 
   const onClick = (item) => {
