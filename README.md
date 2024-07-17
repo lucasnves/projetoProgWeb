@@ -1,8 +1,15 @@
-# Projeto Django + React
+# Projeto Django + React - Absolute Cinema
 
 ## Visão Geral
 
-Este projeto é uma aplicação web desenvolvida com Django no backend e React no frontend. A aplicação permite aos usuários visualizar filmes, séries e documentários. Além disso, os usuários podem comentar e avaliar cada obra.
+Este projeto é uma aplicação web desenvolvida com Django no backend e React no frontend. A aplicação consiste numa plataforma de avaliação de obras audiovisuais, permitindo aos usuários visualizar filmes, séries e documentários. Além disso, os usuários podem comentar e avaliar cada obra.
+
+### Tecnologias utilizadas:
+- HTML
+- CSS
+- Django
+- React
+- Bootstrap
 
 ## Funcionalidades
 
@@ -50,10 +57,13 @@ Na página de detalhes de cada item de mídia, os usuários autenticados podem:
 ### Frontend (React)
 
 - `src/`: Diretório principal da aplicação React.
+  - `assets/`: Arquivos estáticos de completo do contéudo, como imagens, logos, etc. 
   - `components/`: Componentes reutilizáveis da interface.
+  - `lib/`: Arquivos de store para contatar a API.
   - `pages/`: Páginas principais da aplicação.
   - `services/`: Serviços para comunicação com a API.
   - `App.jsx`: Componente principal da aplicação.
+  - `Rotas.jsx`: Componente controlador da navegação de paginas do site. 
 
 ## Pré-requisitos
 
