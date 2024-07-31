@@ -9,7 +9,7 @@ import Home from './pages/Home';
 import Movies from './pages/Movies';
 import Series from './pages/Series';
 import Documentary from './pages/Documentary';
-import Movie from './pages/Movie';
+// import Movie from './pages/Movie';
 
 function Logout() {
   localStorage.clear();
@@ -40,7 +40,7 @@ export default function Rotas() {
         <Route path="/movies" element={<Movies />} />
         <Route path="/series" element={<Series />} />
         <Route path="/documentary" element={<Documentary />} />
-        <Route path="/movie/:id" element={<Movie />} />
+        {/* <Route path="/movie/:id" element={<Movie />} /> */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

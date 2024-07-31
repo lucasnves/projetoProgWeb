@@ -4,6 +4,7 @@ import '../styles/Card.css';
 import Comments from './Comments';
 
 export default function Card({ item, title, href, onClick }) {
+  console.log(item);
   function renderStars(numStars) {
     let stars = [];
     for (let i = 0; i < numStars; i++) {
@@ -42,16 +43,16 @@ export default function Card({ item, title, href, onClick }) {
   return (
     <div style={{ width: '80%' }}>
       <div className="card-title">
-        <p style={{ fontWeight: 700, fontSize: 32 }}>{title}</p>
+        {/* <p style={{ fontWeight: 700, fontSize: 32 }}>{title}</p> */}
         <p style={{ fontWeight: 500, fontSize: 20 }}>Ver mais</p>
       </div>
       {item.map((item) => (
         <div
           key={item.id}
           className="card-content"
-          onClick={() => onClick(item)}
+          // onClick={() => onClick(item)}
         >
-          <img style={{ width: 130, borderRadius: 8 }} src={poster} />
+          <img style={{ width: 130, borderRadius: 8 }} src={`https://image.tmdb.org/t/p/original${item.poster_path}`} />
           <div style={{ width: '100%' }}>
             <div
               style={{
@@ -59,18 +60,18 @@ export default function Card({ item, title, href, onClick }) {
                 justifyContent: 'space-between',
               }}
             >
-              <p style={{ fontWeight: 700, fontSize: 28 }}>{item.name}</p>
+              <p style={{ fontWeight: 700, fontSize: 28 }}>{item.title}</p>
               <div style={{ display: 'flex', gap: 10 }}>
                 <p>{renderStars(item.average_stars)}</p>
                 <Comments item={item.comments_count} />
               </div>
             </div>
             <small>
-              {item.author} • {item.movie_created}
+              {item.author} • {item.release_date}
             </small>
             <br />
             <br />
-            <p>{item.description}</p>
+            <p>{item.overview}</p>
           </div>
         </div>
       ))}
