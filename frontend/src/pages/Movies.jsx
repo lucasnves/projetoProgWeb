@@ -3,75 +3,71 @@
 // import Card from '../components/Card';
 // import { filterMovies, loadAllMovies } from '../lib/store';
 
-import MovieList from "../components/MovieList";
+import MovieList from '../components/MovieList';
 
 export default function Movies() {
-//   const navigate = useNavigate();
-//   const [movies, setMovies] = useState([]);
-//   const [filtro, setFiltro] = useState('Filmes');
-//   const [searchMovie, setSearchMovie] = useState('');
+  //   const navigate = useNavigate();
+  //   const [movies, setMovies] = useState([]);
+  //   const [filtro, setFiltro] = useState('Filmes');
+  //   const [searchMovie, setSearchMovie] = useState('');
 
-//   const load = async () => {
-//     const data = await loadAllMovies();
-//     setMovies(data);
-//   };
+  //   const load = async () => {
+  //     const data = await loadAllMovies();
+  //     setMovies(data);
+  //   };
 
-//   const onClick = (item) => {
-//     navigate(`/movie/${item.id}`);
-//   };
+  //   const onClickFilter = async (item) => {
+  //     const data = await filterMovies(item.filter);
+  //     setFiltro(item.name);
+  //     setMovies(data);
+  //   };
 
-//   const onClickFilter = async (item) => {
-//     const data = await filterMovies(item.filter);
-//     setFiltro(item.name);
-//     setMovies(data);
-//   };
+  //   const onSearchChange = (event) => {
+  //     setSearchMovie(event.target.value);
+  //   };
 
-//   const onSearchChange = (event) => {
-//     setSearchMovie(event.target.value);
-//   };
+  //   const searchMovies = async () => {
+  //     if (searchMovie.trim() !== '') {
+  //       const data = await filterMovies('name', searchMovie);
+  //       setFiltro(`Resultado da busca por "${searchMovie}"`);
+  //       setMovies(data);
+  //     } else {
+  //       load();
+  //       setFiltro('Filmes');
+  //     }
+  //   };
 
-//   const searchMovies = async () => {
-//     if (searchMovie.trim() !== '') {
-//       const data = await filterMovies('name', searchMovie);
-//       setFiltro(`Resultado da busca por "${searchMovie}"`);
-//       setMovies(data);
-//     } else {
-//       load();
-//       setFiltro('Filmes');
-//     }
-//   };
+  //   useEffect(() => {
+  //     load();
+  //   }, []);
 
-//   useEffect(() => {
-//     load();
-//   }, []);
+  //   const filters = [
+  //     { id: 1, name: 'Recentes', filter: 'recents' },
+  //     { id: 2, name: 'Melhor Avaliado', filter: 'best_rated' },
+  //     { id: 3, name: 'Mais Avaliados', filter: 'top_rated' },
+  //     { id: 4, name: 'Menos Avaliados', filter: 'least_rated' },
+  //     { id: 5, name: 'Mais Comentados', filter: 'most_commented' },
+  //   ];
 
-//   const filters = [
-//     { id: 1, name: 'Recentes', filter: 'recents' },
-//     { id: 2, name: 'Melhor Avaliado', filter: 'best_rated' },
-//     { id: 3, name: 'Mais Avaliados', filter: 'top_rated' },
-//     { id: 4, name: 'Menos Avaliados', filter: 'least_rated' },
-//     { id: 5, name: 'Mais Comentados', filter: 'most_commented' },
-//   ];
-
-   return (
-      <MovieList />
-//       <div>
-//         <h3>Filtros:</h3>
-//         <div>
-//           {filters.map((item) => (
-//             <h4 key={item.id} onClick={() => onClickFilter(item)}>
-//               {item.name}
-//             </h4>
-//           ))}
-//         </div>
-//         <div>
-//           <input type="text" value={searchMovie} onChange={onSearchChange} />
-//           <button onClick={searchMovies}>Buscar</button>
-//         </div>
-//       </div>
-//       <div style={{ display: 'flex', justifyContent: 'center' }}>
-//         <Card item={movies} title={filtro ?? 'Filmes'} onClick={onClick} />
-//       </div>
-//     </>
+  return (
+    <MovieList />
+    //       <div>
+    //         <h3>Filtros:</h3>
+    //         <div>
+    //           {filters.map((item) => (
+    //             <h4 key={item.id} onClick={() => onClickFilter(item)}>
+    //               {item.name}
+    //             </h4>
+    //           ))}
+    //         </div>
+    //         <div>
+    //           <input type="text" value={searchMovie} onChange={onSearchChange} />
+    //           <button onClick={searchMovies}>Buscar</button>
+    //         </div>
+    //       </div>
+    //       <div style={{ display: 'flex', justifyContent: 'center' }}>
+    //         <Card item={movies} title={filtro ?? 'Filmes'} onClick={onClick} />
+    //       </div>
+    //     </>
   );
 }

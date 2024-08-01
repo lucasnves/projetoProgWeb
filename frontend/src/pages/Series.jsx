@@ -1,7 +1,8 @@
+import SerieList from "../components/SerieList";
+
+
 export default function Series() {
   return (
-    <>
-      <h1>Página de Séries</h1>
-    </>
+    <SerieList />
   );
 }
