@@ -3,7 +3,7 @@
 from django.contrib.auth.models import User
 from django.db.models import Avg, Count
 from rest_framework import serializers
-from .models import Work, Movie, Series, Documentary, Rating
+from .models import Work, Movie, Series, Documentary, Rating, Genre
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,9 +15,15 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ['id', 'name']
+
 class WorkSerializer(serializers.ModelSerializer):
     average_stars = serializers.SerializerMethodField()
     comments_count = serializers.SerializerMethodField()
+    genres = GenreSerializer(many=True, read_only=True)
 
     class Meta:
         model = Work
