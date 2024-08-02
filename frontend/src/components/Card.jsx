@@ -48,7 +48,7 @@ export default function Card({ item }) {
   };
 
   return (
-    <ul className='card-list'>
+    <ul className="card-list">
       {item.map((item) => (
         <li
           key={item.id}
@@ -56,19 +56,25 @@ export default function Card({ item }) {
           onClick={() => onClick(item)}
         >
           <div className="poster">
-            <img src={`https://image.tmdb.org/t/p/original${item.poster_path}`} />
+            <img
+              src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
+            />
           </div>
-          <div>
-            <div className='card-title'>
-              <p>
-                {item.title ? item.title : item.name}
-              </p>
+          <div className="card-info">
+            <div className="card-title">
+              <p>{item.title ? item.title : item.name}</p>
             </div>
-            <div className="card-info">
+            <div className="hidden-content">
               <p>
                 {item.release_date ? item.release_date : item.first_air_date}
               </p>
-              <p>{item.overview}</p>
+              {item.overview && (
+                <p className="description">
+                  {item.overview.length > 100
+                    ? `${item.overview.substring(0, 100)}...`
+                    : item.overview}
+                </p>
+              )}
             </div>
           </div>
         </li>
