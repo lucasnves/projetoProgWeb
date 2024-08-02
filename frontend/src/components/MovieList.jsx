@@ -23,6 +23,6 @@ export default function MovieList() {
     }, []);
 
     return (
-        <Card item={movies}/>
+        <Card item={movies} />
     );
 }

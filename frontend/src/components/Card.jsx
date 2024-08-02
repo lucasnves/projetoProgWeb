@@ -48,41 +48,31 @@ export default function Card({ item }) {
   };
 
   return (
-    <div style={{ width: '80%' }}>
+    <ul className='card-list'>
       {item.map((item) => (
-        <div
+        <li
           key={item.id}
           className="card-content"
           onClick={() => onClick(item)}
         >
-          <img
-            style={{ width: 130, borderRadius: 8 }}
-            src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
-          />
-          <div style={{ width: '100%' }}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-              }}
-            >
-              <p style={{ fontWeight: 700, fontSize: 28 }}>
+          <div className="poster">
+            <img src={`https://image.tmdb.org/t/p/original${item.poster_path}`} />
+          </div>
+          <div>
+            <div className='card-title'>
+              <p>
                 {item.title ? item.title : item.name}
               </p>
-              <div style={{ display: 'flex', gap: 10 }}>
-                <p>{renderStars(item.vote_average)}</p>
-                <Comments item={item.vote_count} />
-              </div>
             </div>
-            <small>
-              {item.release_date ? item.release_date : item.first_air_date}
-            </small>
-            <br />
-            <br />
-            <p>{item.overview}</p>
+            <div className="card-info">
+              <p>
+                {item.release_date ? item.release_date : item.first_air_date}
+              </p>
+              <p>{item.overview}</p>
+            </div>
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
