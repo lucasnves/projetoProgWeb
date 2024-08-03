@@ -4,7 +4,7 @@ import Comments from './Comments';
 import { useNavigate } from 'react-router-dom';
 import Feedback from '../pages/Feedback';
 
-export default function Card({ item }) {
+export default function Card({ item, type }) {
   const navigate = useNavigate();
 
   function renderStars(numStars) {
@@ -43,8 +43,7 @@ export default function Card({ item }) {
   }
 
   const onClick = (item) => {
-    navigate(`/feedback/${item.id}`);
-    <Feedback item={item} />;
+    navigate(`/feedback/${type}/${item.id}`);
   };
 
   return (
