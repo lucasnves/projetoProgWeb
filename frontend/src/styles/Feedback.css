@@ -23,7 +23,7 @@
 }
 
 .movie-card-image {
-  width: 100%;
+  width: 70%;
   border-radius: 8px 8px 0 0;
 }
 
@@ -39,14 +39,19 @@
 .card-bottom-container h3 {
   color: #4a4a4a;
   text-align: center;
-  font-size: 14px;
   font-weight: 700;
   margin-bottom: 10px;
   min-height: 40px;
 }
 
-.btn {
-  background-color: var(--color-primary);
+.card-bottom-container p {
+  font-size: 1rem;
+}
+
+.form-btn {
+  background-color: #272033;
+  border-radius: 6px;
+  color: #fff;
   font-size: 14px;
   font-weight: 700;
   height: 40px;
@@ -54,4 +59,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.form-btn:hover {
+  background-color: #4f3e5c;
+  color: #fff;
 }

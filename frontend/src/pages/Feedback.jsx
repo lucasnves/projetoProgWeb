@@ -1,10 +1,9 @@
 import '../styles/Feedback.css';
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 
 export default function Feedback() {
-
   const { type, itemID } = useParams();
   const [item, setItem] = useState([]);
 
@@ -14,14 +13,13 @@ export default function Feedback() {
       url: `https://api.themoviedb.org/3/${type}/${itemID}`,
       params: {
         api_key: 'e58c5ed0f045b0e8da70ad316a551a6e',
-        language: 'pt-BR'
-      }
-    }).then(response => {
+        language: 'pt-BR',
+      },
+    }).then((response) => {
       console.log(response.data);
       setItem(response.data);
-
-    })
-  }
+    });
+  };
 
   useEffect(() => {
     getItemById();
@@ -29,10 +27,13 @@ export default function Feedback() {
 
   return (
     <div className="form-container">
-      <img className="movie-card-image" src={`https://image.tmdb.org/t/p/original${item.poster_path}`} />
+      <img
+        className="movie-card-image"
+        src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
+      />
       <div className="card-bottom-container">
         <h3>{item.title ? item.title : item.name}</h3>
-        <p>{item.overview ? item.overview : ""}</p>
+        <p>{item.overview ? item.overview : ''}</p>
         <form className="form">
           <div className="form-group form-group">
             <label htmlFor="email">Informe seu email</label>
@@ -49,12 +50,14 @@ export default function Feedback() {
             </select>
           </div>
           <div className="form-btn-container">
-            <button type="submit" className="btn btn-primary btn">
+            <button type="submit" className="form-btn">
               Salvar
             </button>
           </div>
         </form>
-        <button className="btn btn-primary btn mt-3">Cancelar</button>
+        <Link to={type == 'movie' ? '/movies' : '/series'}>
+          <button className="form-btn mt-3">Cancelar</button>
+        </Link>
       </div>
     </div>
   );
