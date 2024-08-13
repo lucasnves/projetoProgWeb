@@ -18,6 +18,16 @@ class WorkViewSet(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = WorkSerializer
 
+    def get_serializer_class(self):
+        work_type = self.request.data.get('work_type')
+        if work_type == 'movie':
+            return MovieSerializer
+        elif work_type == 'series':
+            return SeriesSerializer
+        elif work_type == 'documentary':
+            return DocumentarySerializer
+        return WorkSerializer
+    
     def get_queryset(self):
         queryset = Work.objects.all()
         name = self.request.query_params.get('name')
