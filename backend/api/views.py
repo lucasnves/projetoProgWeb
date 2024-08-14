@@ -19,9 +19,19 @@ WORK_TYPE_MODELS = {
 
 class WorkViewSet(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = WorkSerializer
 
     def get_serializer_class(self):
+        work_id = self.request.query_params.get('id')
+        
+        if work_id:
+            work = Work.objects.filter(id=work_id).first()
+            if isinstance(work, Movie):
+                return MovieSerializer
+            elif isinstance(work, Series):
+                return SeriesSerializer
+            elif isinstance(work, Documentary):
+                return DocumentarySerializer
+        
         work_type = self.request.data.get('work_type')
         if work_type == 'movie':
             return MovieSerializer

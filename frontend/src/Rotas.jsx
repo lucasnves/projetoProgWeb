@@ -10,6 +10,7 @@ import Movies from './pages/Movies';
 import Series from './pages/Series';
 import Feedback from './pages/Feedback';
 import SearchResult from './pages/SearchResult';
+import UserRatings from './pages/UserRating';;
 
 function Logout() {
   localStorage.clear();
@@ -39,6 +40,7 @@ export default function Rotas() {
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/movies" element={<Movies />} />
         <Route path="/series" element={<Series />} />
+        <Route path="/user-ratings" element={<UserRatings />} />
         <Route path="/feedback/:type/:itemID" element={<Feedback />} />
         <Route path="/search-results" element={<SearchResult />} />
         <Route path="*" element={<NotFound />} />

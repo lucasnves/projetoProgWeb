@@ -16,6 +16,7 @@ import {
   getUserById,
 } from '../lib/store';
 import Score from '../components/Score';
+import { useLocation } from 'react-router-dom';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
@@ -27,7 +28,17 @@ export default function Feedback() {
   const [userId, setUserId] = useState(1);
   const [userNames, setUserNames] = useState({});
   const [editingRating, setEditingRating] = useState(null);
+  const location = useLocation();
 
+  useEffect(() => {
+    if (location.state && location.state.rating) {
+      const rating = location.state.rating;
+      setComment(rating.comment);
+      setScore(rating.star.toString());
+      setEditingRating(rating);
+    }
+  }, [location.state]);
+  
   const getItemById = () => {
     axios({
       method: 'get',

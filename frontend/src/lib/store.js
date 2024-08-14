@@ -195,3 +195,14 @@ export const deleteRating = async (ratingId) => {
     return false;
   }
 };
+
+// Função para carregar os ratings de um usuário específico
+export const loadUserRatings = async (userId) => {
+  try {
+    const response = await api.get(`api/ratings/?user_id=${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao buscar ratings do usuário:', error);
+    return [];
+  }
+};

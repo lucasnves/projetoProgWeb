@@ -46,6 +46,14 @@ export default function Navbar() {
                 Séries
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink
+                to="/user-ratings"
+                className={({ isActive }) => (isActive ? 'active' : '')}
+              >
+                Avaliações
+              </NavLink>
+            </li>
           </ul>
         </div>
       </div>
