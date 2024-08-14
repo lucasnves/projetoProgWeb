@@ -22,5 +22,5 @@ export default function MovieList() {
     getMovies();
   }, []);
 
-  return <Card item={movies} />;
+  return <Card item={movies} type="movie" />;
 }

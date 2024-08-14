@@ -4,16 +4,17 @@ import Comments from './Comments';
 import { useNavigate } from 'react-router-dom';
 import Score from './Score';
 
-export default function Card({ item }) {
+export default function Card({ item, type }) {
   const navigate = useNavigate();
 
   const onClick = (item) => {
-    let type = '';
-    if (item.media_type == "tv") {
-      type = 'tv';
-    }
-    else {
-      type = 'movie'
+    if (type == undefined) {
+      if (item.media_type == "tv") {
+        type = "tv";
+      }
+      else {
+        type = "movie";
+      }
     }
     navigate(`/feedback/${type}/${item.id}`);
   };
