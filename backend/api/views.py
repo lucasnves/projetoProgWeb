@@ -8,6 +8,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Work, Movie, Series, Documentary, Rating
 from django.db.models import Avg, Count
 from rest_framework.exceptions import ValidationError
+from rest_framework.views import APIView
+from rest_framework import permissions
 
 WORK_TYPE_MODELS = {
     'movie': Movie,
@@ -127,3 +129,12 @@ class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
+
+
+class CurrentUserView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, format=None):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data)

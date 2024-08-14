@@ -133,3 +133,19 @@ export const createRating = async (data) => {
     return null;
   }
 };
+
+// Obter informações do usuário logado
+export const getCurrentUser = async () => {
+  try {
+    const response = await api.get('api/current-user/', {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao obter usuário logado:', error.response ? error.response.data : error.message);
+    return null;
+  }
+};

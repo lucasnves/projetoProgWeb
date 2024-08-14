@@ -1,12 +1,20 @@
 import '../styles/Feedback.css';
+import '../styles/cardFeedback.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { createWork, load, loadRatings, createRating, loadAllWorks } from '../lib/store';
+import {
+  createWork,
+  load,
+  loadRatings,
+  createRating,
+  loadAllWorks,
+  getCurrentUser,
+} from '../lib/store';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
-  const [typeWork, setTypeWork] = useState("");
+  const [typeWork, setTypeWork] = useState('');
   const [item, setItem] = useState([]);
   const [ratings, setRatings] = useState([]);
   const [comment, setComment] = useState('');
@@ -33,13 +41,13 @@ export default function Feedback() {
       try {
         const loadAllRating = await loadRatings(itemID);
         setRatings(loadAllRating);
-        console.log("AAAAAAAAAA" + ratings);
+        console.log('AAAAAAAAAA' + ratings);
       } catch (e) {
-        console.log("erro")
+        console.log('erro');
       }
     } else {
-      if (!item) return
-      console.log('item', item)
+      if (!item) return;
+      console.log('item', item);
       let data = null;
       switch (type) {
         case 'movie':
@@ -48,12 +56,14 @@ export default function Feedback() {
             id: item.id,
             name: item.title,
             description: item.overview,
-            ...(item.production_companies && item.production_companies.length ? { author: item.production_companies[0].name } : { author: '-' }),
+            ...(item.production_companies && item.production_companies.length
+              ? { author: item.production_companies[0].name }
+              : { author: '-' }),
             work_created: new Date().getFullYear(),
             genres: [1, 2],
             box_office: item.revenue,
             year_released: new Date(item.release_date).getFullYear(),
-          }
+          };
           break;
         case 'tv':
           setTypeWork('series');
@@ -67,8 +77,10 @@ export default function Feedback() {
             episodes: item.number_of_episodes,
             year_started: new Date(item.first_air_date).getFullYear(),
             year_ended: new Date(item.last_air_date).getFullYear(),
-            ...(item.created_by && item.created_by.length ? { author: item.created_by[0].name } : { author: '-' })
-          }
+            ...(item.created_by && item.created_by.length
+              ? { author: item.created_by[0].name }
+              : { author: '-' }),
+          };
           break;
         case 'documentary':
           setTypeWork('documentary');
@@ -82,11 +94,11 @@ export default function Feedback() {
             duration: item.runtime,
             country_of_origin: 'Brasil',
             theme: 'Terror',
-          }
+          };
           break;
-      };
+      }
       if (data && typeWork) {
-        console.log(data, typeWork)
+        console.log(data, typeWork);
         const result = await createWork(data, typeWork);
         console.log(result);
       } else {
@@ -97,11 +109,27 @@ export default function Feedback() {
 
   useEffect(() => {
     getItemById();
+    const teste = async () => {
+      const aa = await getUser(userId);
+      console.log(aa);
+    }
+    teste();
   }, []);
 
   useEffect(() => {
     getItemBdId();
   }, [item]);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const user = await getCurrentUser();
+      console.log('user', user);
+      if (user) {
+        setUserId(user.id);
+      }
+    };
+    fetchCurrentUser();
+  }, []);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -113,11 +141,19 @@ export default function Feedback() {
       comment: comment,
     };
 
-    const result = await createRating(ratingData);
-    if (result) {
-      console.log('Avaliação criada com sucesso:', result);
+    const ratings = await loadRatings(itemID);
+    const userHasRated = ratings.some((rating) => rating.user === userId);
+
+    if (!userHasRated) {
+      const result = await createRating(ratingData);
+
+      if (result) {
+        console.log('Avaliação criada com sucesso:', result);
+      } else {
+        console.error('Erro ao criar avaliação.');
+      }
     } else {
-      console.error('Erro ao criar avaliação.');
+      console.log('O usuário já avaliou este item.');
     }
   };
 
@@ -167,11 +203,20 @@ export default function Feedback() {
           </Link>
         </div>
       </div>
-      <div className="comments">
-        {ratings.map(comment => {
-          console.log(comment);
-        }
-        )}
+      <div>
+        {ratings.map((rating, index) => (
+          <div key={index} className="comment-card">
+            <div className="comment-header">
+              <div className="comment-user">{rating.user}</div>
+              <div className="comment-rating">
+                {'★'.repeat(rating.star)}{' '}
+              </div>
+            </div>
+            <div className="comment-body">
+              <p>{rating.comment}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </>
   );

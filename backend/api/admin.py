@@ -1,6 +1,7 @@
 # api/admin.py
 
 from django.contrib import admin
+from django.contrib.auth.models import User
 from .models import Work, Movie, Series, Documentary, Rating, Genre
 
 class GenreAdmin(admin.ModelAdmin):
@@ -32,6 +33,12 @@ class RatingAdmin(admin.ModelAdmin):
     list_filter = ('user', 'work', 'star')
     search_fields = ('user__username', 'work__name', 'star')
 
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'email', 'is_staff', 'is_active')
+    search_fields = ('username', 'email')
+
+# admin.site.unregister(User)
+# admin.site.register(User, UserAdmin)
 
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Work, WorkAdmin)
