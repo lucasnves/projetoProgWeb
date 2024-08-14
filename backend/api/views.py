@@ -138,3 +138,7 @@ class CurrentUserView(APIView):
         user = request.user
         serializer = UserSerializer(user)
         return Response(serializer.data)
+
+class UserDetailView(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer

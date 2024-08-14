@@ -10,4 +10,5 @@ urlpatterns = [
     path('ratings/', views.RatingViewSet.as_view(), name='ratings-list'),
     path('users/', views.CreateUserView.as_view(), name='user-create'),
     path('current-user/', views.CurrentUserView.as_view(), name='current-user'),
+    path('users/<int:pk>/', views.UserDetailView.as_view(), name='user-detail'),
 ]

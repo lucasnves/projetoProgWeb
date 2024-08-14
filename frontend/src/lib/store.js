@@ -149,3 +149,19 @@ export const getCurrentUser = async () => {
     return null;
   }
 };
+
+// Obter informações de um usuário pelo ID
+export const getUserById = async (userId) => {
+  try {
+    const response = await api.get(`api/users/${userId}/`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao obter usuário pelo ID:', error.response ? error.response.data : error.message);
+    return null;
+  }
+};
