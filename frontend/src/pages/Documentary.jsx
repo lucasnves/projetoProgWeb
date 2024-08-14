@@ -1,4 +1,4 @@
-import { createWork } from "../lib/store";
+import { createRating, createWork } from "../lib/store";
 
 export default function Documentary() {
   const teste = async () => {
@@ -35,12 +35,20 @@ export default function Documentary() {
       country_of_origin: "Brasil",
       theme: "Terror",
     };
-    const dataM = await createWork(movie, 'movie');
-    const dataS = await createWork(series, 'series');
-    const dataD = await createWork(documentary, 'documentary');
-    console.log(dataM);
-    console.log(dataS);
-    console.log(dataD);
+    // const dataM = await createWork(movie, 'movie');
+    // const dataS = await createWork(series, 'series');
+    // const dataD = await createWork(documentary, 'documentary');
+    // console.log(dataM);
+    // console.log(dataS);
+    // console.log(dataD);
+
+    const ratingData = {
+      user: 1,
+      work: 573435, // ID da obra que está sendo avaliada
+      star: 5, // Nota da avaliação
+      comment: 'Excelente trabalho!' // Comentário (opcional)
+    };
+    const daa = await createRating(ratingData);
   }
 
 

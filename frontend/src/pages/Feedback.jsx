@@ -2,7 +2,7 @@ import '../styles/Feedback.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { createWork, load } from '../lib/store';
+import { createWork, load, loadRatings } from '../lib/store';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
@@ -19,7 +19,6 @@ export default function Feedback() {
         language: 'pt-BR',
       },
     }).then((response) => {
-      console.log(response.data);
       setItem(response.data);
     });
   };
@@ -28,8 +27,8 @@ export default function Feedback() {
     const loadWork = await load(itemID);
     if (loadWork) {
       try {
-        const loadRatings = await loadRatings(itemID);
-        setRatings(loadRatings);
+        const loadAllRating = await loadRatings(itemID);
+        setRatings(loadAllRating);
       } catch (e) {
         console.log("erro")
       }

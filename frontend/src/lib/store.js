@@ -110,3 +110,26 @@ export const createWork = async (data, type) => {
     return null;
   }
 };
+
+/*
+ *  const ratingData = {
+ *    user: 1, // ID do user
+ *    work: 1, // ID da obra que está sendo avaliada
+ *    star: 5, // Nota da avaliação
+ *    comment: 'Excelente trabalho!' // Comentário (opcional)
+ *  };
+ */
+// Criar uma avaliação
+export const createRating = async (data) => {
+  try {
+    const response = await api.post('api/ratings/', data, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao criar avaliação:', error.response ? error.response.data : error.message);
+    return null;
+  }
+};
