@@ -8,9 +8,12 @@ import {
   load,
   loadRatings,
   createRating,
+  deleteRating,
+  updateRating,
   getCurrentUser,
   getUserById,
 } from '../lib/store';
+import { FaEdit, FaTrash } from 'react-icons/fa';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
@@ -21,6 +24,7 @@ export default function Feedback() {
   const [score, setScore] = useState('1');
   const [userId, setUserId] = useState(1);
   const [userNames, setUserNames] = useState({});
+  const [editingRating, setEditingRating] = useState(null);
 
   const getItemById = () => {
     axios({
@@ -85,7 +89,7 @@ export default function Feedback() {
       }
       if (data && typeWork) {
         const result = await createWork(data, typeWork);
-        console.log('CRIADO OBRA!',result);
+        console.log('CRIADO OBRA!', result);
       } else {
         console.error('Tipo de obra inválido');
       }
@@ -141,11 +145,57 @@ export default function Feedback() {
 
       if (result) {
         console.log('Avaliação criada com sucesso:', result);
+        setComment('');
+        setScore('1');
+        await getItemBdId();
       } else {
         console.error('Erro ao criar avaliação.');
       }
     } else {
       console.log('O usuário já avaliou este item.');
+    }
+  };
+
+  const handleEdit = (rating) => {
+    setComment(rating.comment);
+    setScore(rating.star.toString());
+    setEditingRating(rating);
+
+    window.scrollTo({
+      top: 80,
+      behavior: 'smooth',
+    });
+  };
+
+  const handleDelete = async (ratingId) => {
+    try {
+      await deleteRating(ratingId);
+      console.log('Avaliação excluída com sucesso');
+      await getItemBdId();
+    } catch (error) {
+      console.error('Erro ao excluir avaliação:', error);
+    }
+  };
+
+  const handleUpdate = async (event) => {
+    event.preventDefault();
+
+    const updatedRatingData = {
+      user: userId,
+      work: itemID,
+      star: parseInt(score, 10),
+      comment: comment,
+    };
+
+    try {
+      await updateRating(editingRating.id, updatedRatingData);
+      console.log('Avaliação atualizada com sucesso');
+      setEditingRating(null);
+      setComment('');
+      setScore('1');
+      await getItemBdId();
+    } catch (error) {
+      console.error('Erro ao atualizar avaliação:', error);
     }
   };
 
@@ -159,7 +209,10 @@ export default function Feedback() {
         <div className="card-bottom-container">
           <h3>{item.title ? item.title : item.name}</h3>
           <p>{item.overview ? item.overview : ''}</p>
-          <form className="form" onSubmit={handleSubmit}>
+          <form
+            className="form"
+            onSubmit={editingRating ? handleUpdate : handleSubmit}
+          >
             <div className="form-group form-group">
               <label htmlFor="comment">Comentário</label>
               <textarea
@@ -186,8 +239,17 @@ export default function Feedback() {
             </div>
             <div className="form-btn-container">
               <button type="submit" className="form-btn">
-                Salvar
+                {editingRating ? 'Atualizar' : 'Salvar'}
               </button>
+              {editingRating && (
+                <button
+                  type="button"
+                  className="form-btn"
+                  onClick={() => setEditingRating(null)}
+                >
+                  Cancelar
+                </button>
+              )}
             </div>
           </form>
           <Link to={type === 'movie' ? '/movies' : '/series'}>
@@ -199,8 +261,24 @@ export default function Feedback() {
         {ratings.map((rating, index) => (
           <div key={index} className="comment-card">
             <div className="comment-header">
-              <div className="comment-user">{userNames[rating.user] || 'Carregando...'}</div>
-              <div className="comment-rating">{'★'.repeat(rating.star)} </div>
+              <div className="comment-user">
+                {userNames[rating.user] || 'Carregando...'}
+              </div>
+              <div className="comment-rating">
+                {'★'.repeat(rating.star)}
+                {rating.user === userId && (
+                  <div className="comment-actions">
+                    <FaEdit
+                      className="comment-action-icon"
+                      onClick={() => handleEdit(rating)}
+                    />
+                    <FaTrash
+                      className="comment-action-icon"
+                      onClick={() => handleDelete(rating.id)}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
             <div className="comment-body">
               <p>{rating.comment}</p>
