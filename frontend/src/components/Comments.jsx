@@ -1,33 +1,34 @@
-import '../styles/Comments.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import Score from './Score';
 
-export default function Comments(numComments) {
+export default function Comments({ ratings, userNames, userId, handleDelete, handleEdit }) {
+
   return (
-    <div className="comments">
-      <p style={{ fontWeight: 600 }}>{numComments.item}</p>
-      <svg
-        width="24px"
-        height="24px"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-        <g
-          id="SVGRepo_tracerCarrier"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        ></g>
-        <g id="SVGRepo_iconCarrier">
-          {' '}
-          <path
-            d="M7 9H17M7 13H12M21 20L17.6757 18.3378C17.4237 18.2118 17.2977 18.1488 17.1656 18.1044C17.0484 18.065 16.9277 18.0365 16.8052 18.0193C16.6672 18 16.5263 18 16.2446 18H6.2C5.07989 18 4.51984 18 4.09202 17.782C3.71569 17.5903 3.40973 17.2843 3.21799 16.908C3 16.4802 3 15.9201 3 14.8V7.2C3 6.07989 3 5.51984 3.21799 5.09202C3.40973 4.71569 3.71569 4.40973 4.09202 4.21799C4.51984 4 5.0799 4 6.2 4H17.8C18.9201 4 19.4802 4 19.908 4.21799C20.2843 4.40973 20.5903 4.71569 20.782 5.09202C21 5.51984 21 6.0799 21 7.2V20Z"
-            stroke="#000000"
-            strokeWidth="2.3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          ></path>{' '}
-        </g>
-      </svg>
+    <div>
+      {ratings.map((rating, index) => (
+        <div key={index} className="comment-card card-content">
+          <div className="comment-header">
+            <div className="comment-user">
+              {typeof (userNames) === 'string' ? userNames : userNames[rating.user]}
+            </div>
+            <div className="comment-rating">
+              <Score numStars={rating.star} />
+            </div>
+          </div>
+          <div className="comment-body">
+            <p>{rating.comment}</p>
+          </div>
+          <div className="comment-actions">
+            {rating.user === userId && (
+              <div className="comment-action-icon">
+                <FontAwesomeIcon icon={faPenToSquare} onClick={() => handleEdit(rating, rating.work)} />
+                <FontAwesomeIcon icon={faTrashCan} onClick={() => handleDelete(rating.id)} />
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

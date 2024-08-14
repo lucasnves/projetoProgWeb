@@ -17,6 +17,7 @@ import {
 } from '../lib/store';
 import Score from '../components/Score';
 import { useLocation } from 'react-router-dom';
+import Comments from '../components/Comments';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
@@ -38,7 +39,7 @@ export default function Feedback() {
       setEditingRating(rating);
     }
   }, [location.state]);
-  
+
   const getItemById = () => {
     axios({
       method: 'get',
@@ -169,7 +170,7 @@ export default function Feedback() {
     }
   };
 
-  const handleEdit = (rating) => {
+  const handleEdit = (rating, movieId) => {
     setComment(rating.comment);
     setScore(rating.star.toString());
     setEditingRating(rating);
@@ -262,7 +263,8 @@ export default function Feedback() {
         </div>
       </div>
       <div>
-        {ratings.map((rating, index) => (
+        <Comments userId={userId} ratings={ratings} userNames={userNames} handleDelete={handleDelete} handleEdit={handleEdit} />
+        {/* {ratings.map((rating, index) => (
           <div key={index} className="comment-card card-content">
             <div className="comment-header">
               <div className="comment-user">
@@ -284,7 +286,7 @@ export default function Feedback() {
               )}
             </div>
           </div>
-        ))}
+        ))} */}
       </div>
     </>
   );

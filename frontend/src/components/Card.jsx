@@ -1,8 +1,6 @@
 import React from 'react';
 import '../styles/Card.css';
-import Comments from './Comments';
 import { useNavigate } from 'react-router-dom';
-import Score from './Score';
 
 export default function Card({ item, type }) {
   const navigate = useNavigate();

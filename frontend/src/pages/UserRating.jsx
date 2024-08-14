@@ -8,10 +8,12 @@ import {
 import { FaEdit, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import '../styles/UserRating.css';
+import Comments from '../components/Comments';
 
 export default function UserRatings() {
   const [ratings, setRatings] = useState([]);
   const [userId, setUserId] = useState(null);
+  const [userName, setUserName] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,6 +21,7 @@ export default function UserRatings() {
       const user = await getCurrentUser();
       if (user) {
         setUserId(user.id);
+        setUserName(user.username);
         const userRatings = await loadUserRatings(user.id);
         setRatings(userRatings);
       }
@@ -26,10 +29,10 @@ export default function UserRatings() {
     fetchUserRatings();
   }, []);
 
-  const handleEdit = async (movieId, rating) => {
+  const handleEdit = async (rating, movieId) => {
     const data = await load(movieId);
     let type = '';
-  
+
     if (data.year_ended !== undefined) {
       type = 'tv';
     } else if (data.box_office !== undefined) {
@@ -53,29 +56,11 @@ export default function UserRatings() {
     <div className="user-ratings-container">
       <h2>Minhas Avaliações</h2>
       <div className="ratings-list">
-        {ratings.length > 0 ? (
-          ratings.map((rating) => (
-            <div key={rating.id} className="rating-card">
-              <div className="rating-header">
-                <div className="rating-title">{rating.work.name}</div>
-                <div className="rating-stars">{'★'.repeat(rating.star)}</div>
-              </div>
-              <div className="rating-comment">{rating.comment}</div>
-              <div className="rating-actions">
-                <FaEdit
-                  className="action-icon"
-                  onClick={() => handleEdit(rating.work, rating)}
-                />
-                <FaTrash
-                  className="action-icon"
-                  onClick={() => handleDelete(rating.id)}
-                />
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>Você ainda não avaliou nenhum item.</p>
-        )}
+        {ratings.length > 0 ?
+          <Comments ratings={ratings} handleDelete={handleDelete} handleEdit={handleEdit} userNames={userName} userId={userId} />
+          : (
+            <p>Você ainda não avaliou nenhum item.</p>
+          )}
       </div>
     </div>
   );
