@@ -2,13 +2,16 @@ import '../styles/Feedback.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { createWork, load, loadRatings } from '../lib/store';
+import { createWork, load, loadRatings, createRating } from '../lib/store';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
   const [typeWork, setTypeWork] = useState("");
   const [item, setItem] = useState([]);
   const [ratings, setRatings] = useState([]);
+  const [comment, setComment] = useState('');
+  const [score, setScore] = useState('1');
+  const [userId, setUserId] = useState(1);
 
   const getItemById = () => {
     axios({
@@ -96,7 +99,25 @@ export default function Feedback() {
 
   useEffect(() => {
     getItemBdId();
-  }, [item])
+  }, [item]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    
+    const ratingData = {
+      user: userId,
+      work: itemID,
+      star: parseInt(score, 10),
+      comment: comment,
+    };
+
+    const result = await createRating(ratingData);
+    if (result) {
+      console.log('Avaliação criada com sucesso:', result);
+    } else {
+      console.error('Erro ao criar avaliação.');
+    }
+  };
 
   return (
     <div className="form-container">
@@ -107,19 +128,29 @@ export default function Feedback() {
       <div className="card-bottom-container">
         <h3>{item.title ? item.title : item.name}</h3>
         <p>{item.overview ? item.overview : ''}</p>
-        <form className="form">
+        <form className="form" onSubmit={handleSubmit}>
           <div className="form-group form-group">
-            <label htmlFor="email">Informe seu email</label>
-            <input type="email" className="form-control" id="email" />
+            <label htmlFor="comment">Comentário</label>
+            <textarea
+              className="form-control"
+              id="comment"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+            />
           </div>
           <div className="form-group form-group">
             <label htmlFor="score">Informe sua avaliação</label>
-            <select className="form-control" id="score">
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4</option>
-              <option>5</option>
+            <select 
+              className="form-control" 
+              id="score" 
+              value={score} 
+              onChange={(e) => setScore(e.target.value)}
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
             </select>
           </div>
           <div className="form-btn-container">
@@ -128,7 +159,7 @@ export default function Feedback() {
             </button>
           </div>
         </form>
-        <Link to={type == 'movie' ? '/movies' : '/series'}>
+        <Link to={type === 'movie' ? '/movies' : '/series'}>
           <button className="form-btn mt-3">Cancelar</button>
         </Link>
       </div>
