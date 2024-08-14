@@ -165,3 +165,33 @@ export const getUserById = async (userId) => {
     return null;
   }
 };
+
+// Atualizar uma avaliação existente
+export const updateRating = async (ratingId, updatedData) => {
+  try {
+    const response = await api.put(`api/ratings/${ratingId}/update/`, updatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Erro ao atualizar avaliação:', error.response ? error.response.data : error.message);
+    return null;
+  }
+};
+
+// Apagar uma avaliação existente
+export const deleteRating = async (ratingId) => {
+  try {
+    await api.delete(`api/ratings/${ratingId}/delete/`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return true;
+  } catch (error) {
+    console.error('Erro ao apagar avaliação:', error.response ? error.response.data : error.message);
+    return false;
+  }
+};
