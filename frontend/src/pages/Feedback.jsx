@@ -8,8 +8,8 @@ import {
   load,
   loadRatings,
   createRating,
-  loadAllWorks,
   getCurrentUser,
+  getUserById,
 } from '../lib/store';
 
 export default function Feedback() {
@@ -20,6 +20,7 @@ export default function Feedback() {
   const [comment, setComment] = useState('');
   const [score, setScore] = useState('1');
   const [userId, setUserId] = useState(1);
+  const [userNames, setUserNames] = useState({});
 
   const getItemById = () => {
     axios({
@@ -41,13 +42,12 @@ export default function Feedback() {
       try {
         const loadAllRating = await loadRatings(itemID);
         setRatings(loadAllRating);
-        console.log('AAAAAAAAAA' + ratings);
+        await updateUserNames(loadAllRating);
       } catch (e) {
-        console.log('erro');
+        console.log('Erro ao carregar avaliações:', e);
       }
     } else {
       if (!item) return;
-      console.log('item', item);
       let data = null;
       switch (type) {
         case 'movie':
@@ -72,7 +72,7 @@ export default function Feedback() {
             name: item.name,
             description: item.overview,
             work_created: new Date().getFullYear(),
-            genres: [1, 2], // IDs dos gêneros
+            genres: [1, 2],
             seasons: item.number_of_seasons,
             episodes: item.number_of_episodes,
             year_started: new Date(item.first_air_date).getFullYear(),
@@ -82,54 +82,46 @@ export default function Feedback() {
               : { author: '-' }),
           };
           break;
-        case 'documentary':
-          setTypeWork('documentary');
-          data = {
-            id: item.id,
-            name: item.title,
-            description: item.overview,
-            author: 'Autor SSSSSSSSSSSSSSSSSSSSS',
-            work_created: new Date().getFullYear(),
-            genres: [1], // IDs dos gêneros
-            duration: item.runtime,
-            country_of_origin: 'Brasil',
-            theme: 'Terror',
-          };
-          break;
       }
       if (data && typeWork) {
-        console.log(data, typeWork);
         const result = await createWork(data, typeWork);
-        console.log(result);
+        console.log('CRIADO OBRA!',result);
       } else {
         console.error('Tipo de obra inválido');
       }
     }
   };
 
+  const fetchCurrentUser = async () => {
+    const user = await getCurrentUser();
+    if (user) {
+      setUserId(user.id);
+    }
+  };
+
+  const updateUserNames = async (ratings) => {
+    const names = {};
+    for (const rating of ratings) {
+      if (!names[rating.user]) {
+        const userDetails = await getUserById(rating.user);
+        if (userDetails) {
+          names[rating.user] = userDetails.username;
+        }
+      }
+    }
+    setUserNames(names);
+  };
+
   useEffect(() => {
     getItemById();
-    const teste = async () => {
-      const aa = await getUser(userId);
-      console.log(aa);
-    }
-    teste();
-  }, []);
-
-  useEffect(() => {
-    getItemBdId();
-  }, [item]);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      const user = await getCurrentUser();
-      console.log('user', user);
-      if (user) {
-        setUserId(user.id);
-      }
-    };
     fetchCurrentUser();
   }, []);
+
+  useEffect(() => {
+    if (itemID) {
+      getItemBdId();
+    }
+  }, [itemID, item]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -207,10 +199,8 @@ export default function Feedback() {
         {ratings.map((rating, index) => (
           <div key={index} className="comment-card">
             <div className="comment-header">
-              <div className="comment-user">{rating.user}</div>
-              <div className="comment-rating">
-                {'★'.repeat(rating.star)}{' '}
-              </div>
+              <div className="comment-user">{userNames[rating.user] || 'Carregando...'}</div>
+              <div className="comment-rating">{'★'.repeat(rating.star)} </div>
             </div>
             <div className="comment-body">
               <p>{rating.comment}</p>
