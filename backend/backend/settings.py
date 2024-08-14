@@ -14,6 +14,8 @@ from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 import os
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 load_dotenv()
 
@@ -49,6 +51,7 @@ SIMPLE_JWT = {
 # Application definition
 
 INSTALLED_APPS = [
+    'unfold',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -147,3 +150,62 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWS_CREDENTIALS = True
+
+def permission_callback(request):
+    return request.user.has_perm("sample_app.change_model")
+
+UNFOLD = {
+    "SITE_TITLE": "Absolute Cinema",
+    "SITE_HEADER": "Absolute Cinema Admin",
+    "SITE_URL": "/",
+    "THEME": "dark",
+    "LOGIN": {
+        "redirect_after": lambda request: reverse_lazy("admin:index"),
+    },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+        "navigation": [
+            {
+                "title": _("Navigation"),
+                "items": [
+                    {
+                        "title": _("Dashboard"),
+                        "icon": "dashboard", 
+                        "link": reverse_lazy("admin:index"),
+                        "permission": lambda request: request.user.is_superuser,
+                    },
+                    {
+                        "title": _("Users"),
+                        "icon": "people",
+                        "link": reverse_lazy("admin:auth_user_changelist"),
+                    },
+                    {
+                        "title": _("Movies"),
+                        "icon": "movie",
+                        "link": reverse_lazy("admin:api_movie_changelist"),
+                        "permission": permission_callback,
+                    },
+                    {
+                        "title": _("Series"),
+                        "icon": "tv",
+                        "link": reverse_lazy("admin:api_series_changelist"),
+                        "permission": permission_callback,
+                    },
+                    {
+                        "title": _("Works"),
+                        "icon": "home_storage",
+                        "link": reverse_lazy("admin:api_work_changelist"),
+                        "permission": permission_callback,
+                    },
+                    {
+                        "title": _("Ratings"),
+                        "icon": "star",
+                        "link": reverse_lazy("admin:api_rating_changelist"),
+                        "permission": permission_callback,
+                    },
+                ],
+            },
+        ],
+    }
+}
