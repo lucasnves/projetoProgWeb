@@ -15,7 +15,6 @@ import {
   getCurrentUser,
   getUserById,
 } from '../lib/store';
-import { FaEdit, FaTrash } from 'react-icons/fa';
 import Score from '../components/Score';
 
 export default function Feedback() {
@@ -244,15 +243,6 @@ export default function Feedback() {
               <button type="submit" className="form-btn">
                 {editingRating ? 'Atualizar' : 'Salvar'}
               </button>
-              {editingRating && (
-                <button
-                  type="button"
-                  className="form-btn"
-                  onClick={() => setEditingRating(null)}
-                >
-                  Cancelar
-                </button>
-              )}
             </div>
           </form>
           <Link to={type === 'movie' ? '/movies' : '/series'}>
@@ -268,27 +258,19 @@ export default function Feedback() {
                 {userNames[rating.user] || 'Carregando...'}
               </div>
               <div className="comment-rating">
-                {'★'.repeat(rating.star)}
-                {rating.user === userId && (
-                  <div className="comment-actions">
-                    <FaEdit
-                      className="comment-action-icon"
-                      onClick={() => handleEdit(rating)}
-                    />
-                    <FaTrash
-                      className="comment-action-icon"
-                      onClick={() => handleDelete(rating.id)}
-                    />
-                  </div>
-                )}
+                <Score numStars={rating.star} />
               </div>
             </div>
             <div className="comment-body">
               <p>{rating.comment}</p>
             </div>
-            <div className="delete-comment">
-              <FontAwesomeIcon icon={faPenToSquare} />
-              <FontAwesomeIcon icon={faTrashCan} />
+            <div className="comment-actions">
+              {rating.user === userId && (
+                <div className="comment-action-icon">
+                  <FontAwesomeIcon icon={faPenToSquare} onClick={() => handleEdit(rating)} />
+                  <FontAwesomeIcon icon={faTrashCan} onClick={() => handleDelete(rating.id)} />
+                </div>
+              )}
             </div>
           </div>
         ))}
