@@ -7,6 +7,7 @@ from .serializers import UserSerializer, WorkSerializer, MovieSerializer, Series
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Work, Movie, Series, Documentary, Rating
 from django.db.models import Avg, Count
+from rest_framework.exceptions import ValidationError
 
 WORK_TYPE_MODELS = {
     'movie': Movie,
@@ -48,6 +49,16 @@ class WorkViewSet(generics.ListCreateAPIView):
 
     def get_model_from_type(self, work_type):
         return WORK_TYPE_MODELS.get(work_type, Work)
+
+    def perform_create(self, serializer):
+        name = serializer.validated_data.get('name')
+
+        existing_work = Work.objects.filter(name=name).first()
+
+        if existing_work:
+            raise ValidationError({'name': 'A work with this name already exists.', 'id': existing_work.id})
+        
+        serializer.save()
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()

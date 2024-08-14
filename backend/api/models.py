@@ -11,6 +11,7 @@ class Genre(models.Model):
         return self.name
 
 class Work(PolymorphicModel):
+    id = models.IntegerField(primary_key=True) 
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True, null=True)
     author = models.CharField(max_length=100)

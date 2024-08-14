@@ -3,6 +3,7 @@ import { createWork } from "../lib/store";
 export default function Documentary() {
   const teste = async () => {
     const movie = {
+      id: 2020,
       name: "Novo Filme",
       description: "Descrição do novo filme",
       author: "Autor Exemplo",
@@ -12,6 +13,7 @@ export default function Documentary() {
       year_released: 2010
     };
     const series = {
+      id: 2020,
       name: "nova serie",
       description: "Descrição do aaaaaaaaaaaaaaaaaa filme",
       author: "Autor aaaaa",
@@ -23,6 +25,7 @@ export default function Documentary() {
       year_ended: 2020,
     };
     const documentary = {
+      id: 2020,
       name: "Novo DOCUMENTA",
       description: "Descrição do novo filme",
       author: "Autor SSSSSSSSSSSSSSSSSSSSS",

@@ -97,7 +97,16 @@ export const createWork = async (data, type) => {
     });
     return response.data;
   } catch (error) {
-    console.error('Erro ao criar obra:', error);
+    if (error.response) {
+      if (error.response.status === 400) {
+        console.log('Erro de validação:', error.response.data);
+        return error.response.data;
+      } else {
+        console.error('Erro ao criar obra:', error.response.data);
+      }
+    } else {
+      console.error('Erro de rede ou outro erro:', error);
+    }
     return null;
   }
 };
