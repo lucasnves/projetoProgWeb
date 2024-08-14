@@ -44,6 +44,7 @@
   .card-title p {
     font-size: 12px;
     color: #f1f5f9;
+    margin-bottom: 0;
   }
 
   .hidden-content {
@@ -56,11 +57,13 @@
 
   .hidden-content p {
     font-size: 12px;
+    margin-bottom: 0;
   }
 }
 
 .card-content:hover {
   transform: scale(1.03);
+
   .poster img {
     opacity: 0.5;
   }

@@ -23,6 +23,6 @@ export default function SerieList() {
     }, []);
 
     return (
-        <Card item={series} type={"tv"} />
+        <Card item={series} />
     );
 }

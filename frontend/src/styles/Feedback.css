@@ -61,6 +61,10 @@
   justify-content: center;
 }
 
+.card-bottom-container a {
+  text-decoration: none;
+}
+
 .form-btn:hover {
   background-color: #4f3e5c;
   color: #fff;

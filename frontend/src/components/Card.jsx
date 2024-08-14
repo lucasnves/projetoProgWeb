@@ -2,11 +2,19 @@ import React from 'react';
 import '../styles/Card.css';
 import Comments from './Comments';
 import { useNavigate } from 'react-router-dom';
+import Score from './Score';
 
-export default function Card({ item, type }) {
+export default function Card({ item }) {
   const navigate = useNavigate();
 
   const onClick = (item) => {
+    let type = '';
+    if (item.media_type == "tv") {
+      type = 'tv';
+    }
+    else {
+      type = 'movie'
+    }
     navigate(`/feedback/${type}/${item.id}`);
   };
 
@@ -31,6 +39,7 @@ export default function Card({ item, type }) {
               <p>
                 {item.release_date ? item.release_date : item.first_air_date}
               </p>
+              <Score numStars={4} />
               {item.overview && (
                 <p className="description">
                   {item.overview.length > 100
