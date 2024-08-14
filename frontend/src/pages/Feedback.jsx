@@ -2,6 +2,8 @@ import '../styles/Feedback.css';
 import '../styles/cardFeedback.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan, faPenToSquare } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import {
   createWork,
@@ -11,6 +13,7 @@ import {
   getCurrentUser,
   getUserById,
 } from '../lib/store';
+import Score from '../components/Score';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
@@ -85,7 +88,7 @@ export default function Feedback() {
       }
       if (data && typeWork) {
         const result = await createWork(data, typeWork);
-        console.log('CRIADO OBRA!',result);
+        console.log('CRIADO OBRA!', result);
       } else {
         console.error('Tipo de obra inválido');
       }
@@ -197,13 +200,17 @@ export default function Feedback() {
       </div>
       <div>
         {ratings.map((rating, index) => (
-          <div key={index} className="comment-card">
+          <div key={index} className="comment-card card-content">
             <div className="comment-header">
               <div className="comment-user">{userNames[rating.user] || 'Carregando...'}</div>
-              <div className="comment-rating">{'★'.repeat(rating.star)} </div>
+              <div className="comment-rating"> <Score numStars={rating.star} /> </div>
             </div>
             <div className="comment-body">
               <p>{rating.comment}</p>
+            </div>
+            <div className="delete-comment">
+              <FontAwesomeIcon icon={faPenToSquare} />
+              <FontAwesomeIcon icon={faTrashCan} />
             </div>
           </div>
         ))}

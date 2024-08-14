@@ -40,7 +40,6 @@ export default function Card({ item, type }) {
               <p>
                 {item.release_date ? item.release_date : item.first_air_date}
               </p>
-              <Score numStars={item.vote_average} />
               {item.overview && (
                 <p className="description">
                   {item.overview.length > 100

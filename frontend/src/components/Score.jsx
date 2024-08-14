@@ -1,7 +1,6 @@
 export default function Score({ numStars }) {
   let stars = [];
-  const numeroEstrelas = Math.round(numStars / 2);
-  for (let i = 0; i < numeroEstrelas; i++) {
+  for (let i = 0; i < numStars; i++) {
     stars.push(
       <svg
         key={i}
@@ -15,7 +14,7 @@ export default function Score({ numStars }) {
       </svg>
     );
   }
-  for (let i = numeroEstrelas; i < 5; i++) {
+  for (let i = numStars; i < 5; i++) {
     stars.push(
       <svg
         key={i}
