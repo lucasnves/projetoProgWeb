@@ -2,7 +2,7 @@ import '../styles/Feedback.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { createWork, load, loadRatings, createRating } from '../lib/store';
+import { createWork, load, loadRatings, createRating, loadAllWorks } from '../lib/store';
 
 export default function Feedback() {
   const { type, itemID } = useParams();
@@ -28,15 +28,17 @@ export default function Feedback() {
 
   const getItemBdId = async () => {
     const loadWork = await load(itemID);
+
     if (loadWork) {
       try {
         const loadAllRating = await loadRatings(itemID);
         setRatings(loadAllRating);
+        console.log("AAAAAAAAAA" + ratings);
       } catch (e) {
         console.log("erro")
       }
     } else {
-      if(!item) return
+      if (!item) return
       console.log('item', item)
       let data = null;
       switch (type) {
@@ -46,7 +48,7 @@ export default function Feedback() {
             id: item.id,
             name: item.title,
             description: item.overview,
-            ...(item.production_companies && item.production_companies.length ? { author: item.production_companies[0].name } : {author: '-'}),
+            ...(item.production_companies && item.production_companies.length ? { author: item.production_companies[0].name } : { author: '-' }),
             work_created: new Date().getFullYear(),
             genres: [1, 2],
             box_office: item.revenue,
@@ -103,7 +105,7 @@ export default function Feedback() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    
+
     const ratingData = {
       user: userId,
       work: itemID,
@@ -120,49 +122,57 @@ export default function Feedback() {
   };
 
   return (
-    <div className="form-container">
-      <img
-        className="movie-card-image"
-        src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
-      />
-      <div className="card-bottom-container">
-        <h3>{item.title ? item.title : item.name}</h3>
-        <p>{item.overview ? item.overview : ''}</p>
-        <form className="form" onSubmit={handleSubmit}>
-          <div className="form-group form-group">
-            <label htmlFor="comment">Comentário</label>
-            <textarea
-              className="form-control"
-              id="comment"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-            />
-          </div>
-          <div className="form-group form-group">
-            <label htmlFor="score">Informe sua avaliação</label>
-            <select 
-              className="form-control" 
-              id="score" 
-              value={score} 
-              onChange={(e) => setScore(e.target.value)}
-            >
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
-          </div>
-          <div className="form-btn-container">
-            <button type="submit" className="form-btn">
-              Salvar
-            </button>
-          </div>
-        </form>
-        <Link to={type === 'movie' ? '/movies' : '/series'}>
-          <button className="form-btn mt-3">Cancelar</button>
-        </Link>
+    <>
+      <div className="form-container">
+        <img
+          className="movie-card-image"
+          src={`https://image.tmdb.org/t/p/original${item.poster_path}`}
+        />
+        <div className="card-bottom-container">
+          <h3>{item.title ? item.title : item.name}</h3>
+          <p>{item.overview ? item.overview : ''}</p>
+          <form className="form" onSubmit={handleSubmit}>
+            <div className="form-group form-group">
+              <label htmlFor="comment">Comentário</label>
+              <textarea
+                className="form-control"
+                id="comment"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+              />
+            </div>
+            <div className="form-group form-group">
+              <label htmlFor="score">Informe sua avaliação</label>
+              <select
+                className="form-control"
+                id="score"
+                value={score}
+                onChange={(e) => setScore(e.target.value)}
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+            <div className="form-btn-container">
+              <button type="submit" className="form-btn">
+                Salvar
+              </button>
+            </div>
+          </form>
+          <Link to={type === 'movie' ? '/movies' : '/series'}>
+            <button className="form-btn mt-3">Cancelar</button>
+          </Link>
+        </div>
       </div>
-    </div>
+      <div className="comments">
+        {ratings.map(comment => {
+          console.log(comment);
+        }
+        )}
+      </div>
+    </>
   );
 }

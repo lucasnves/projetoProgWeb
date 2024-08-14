@@ -46,14 +46,6 @@ export default function Navbar() {
                 Séries
               </NavLink>
             </li>
-            <li className="nav-item">
-              <NavLink
-                to="/documentary"
-                className={({ isActive }) => (isActive ? 'active' : '')}
-              >
-                Documentários
-              </NavLink>
-            </li>
           </ul>
         </div>
       </div>
